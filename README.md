@@ -88,7 +88,6 @@ $ psql testdb -f sub_table.sql
 
 ```
 $ cat pub_ins_upd.sql
-$ cat pub_ins_upd.sql
 TRUNCATE table_x;
 
 INSERT INTO table_x VALUES (101, now(), 'running', 35.44778, 139.6425);
@@ -119,7 +118,7 @@ $
 $ psql testdb -f sub_table.sql
 ```
 
-この状態で、testdnにログインし、table_xとhistoryの内容を確認する。
+この状態で、testdbにログインし、table_xとhistoryの内容を確認する。
 
 ```
 $ psql testdb -c "TABLE table_x"
