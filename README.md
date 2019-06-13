@@ -17,6 +17,7 @@ https://github.com/eulerto/wal2json
 * 事前にPostgreSQLをソースからビルドします。（PostgreSQL 11.x)
 * wal2jsonをGithubからDLして、``make USE_PGXS=1``オプションつきでビルドします。
     * 注意：2019年2月時点では、PostgreSQL 12(開発版だとビルド時にエラーになってしまいます。PostgreSQL 12 beta1リリースのタイムングで再度確認してみますが、必要があれば、wal2jsonのコードの修正も必要かもしれません。
+    * PostgreSQL 12-beta1上で、wal2jsonモジュールのビルドができることを確認しました。(警告は出ている。gcc (GCC) 7.3.1 20180303 (Red Hat 7.3.1-5)で確認）
 * wal_levelをlogicalに設定して、論理ログを出力可能にします。
 * wal2jsonによって生成される論理ログ格納用のレプリケーションスロットを、生成する。
 ```
