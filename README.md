@@ -33,7 +33,7 @@ CREATE VIEW srv1_slot AS SELECT * FROM pg_logical_slot_get_changes('srv1_slot', 
 * 論理スロットからのWAL取得＆INSERT文生成のpl/pgsql関数を登録する。
 
 ```
-psql testdb -f apply_json.sql
+psql testdb -f apply.sql
 ```
 
 ## 検証
