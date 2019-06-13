@@ -158,7 +158,7 @@ NOTICE:  sql=INSERT INTO history VALUES (103,'2019-02-18 20:30:28.955218','runni
 この状態で、historyテーブルの内容を確認する。
 
 ```
-$ psql -U postgres -p 10001 testdb -c "TABLE history"
+$ psql testdb -c "TABLE history"
  device_id |        update_time         | status  | latitude | longitude
 -----------+----------------------------+---------+----------+-----------
        101 | 2019-02-18 20:30:28.947094 | running | 35.44778 |  139.6425
@@ -172,4 +172,4 @@ $ psql -U postgres -p 10001 testdb -c "TABLE history"
 (8 rows)
 ```
 
-UPDATEによって更新された情報はhistoryテーブルにそれぞれINSEERTされている。
+INSERTによって挿入された情報および、UPDATEによって更新された情報はhistoryテーブルにそれぞれINSEERTされている。
