@@ -17,6 +17,7 @@ DECLARE
   elms integer;
   i integer; -- loop counter
   typ text;
+  val text;
 BEGIN
   sql := 'INSERT INTO ' || t || ' VALUES (';
   elms := jsonb_array_length(j->'columnvalues');
@@ -24,17 +25,24 @@ BEGIN
     IF i <> 0 THEN
       sql := sql || ',';
     END IF;
-    typ := (j->'columntypes')->>i;
-    CASE typ 
-      WHEN 'text', 'timestamp without time zone' THEN
-        -- need quote value
-        sql := sql || '''' || ((j->'columnvalues')->>i) || '''' ;
-      ELSE
-        -- no quote value
-        sql := sql || ((j->'columnvalues')->>i) ;
-    END CASE;
     -- RAISE NOTICE 'val[%]=%', i, (j->'columnvalues')->>i ;
-    -- RAISE NOTICE 'val[%]=%', i, (j->'columntypes')->>i ;
+    -- RAISE NOTICE 'typ[%]=%', i, (j->'columntypes')->>i ;
+    val := ((j->'columnvalues')->>i) ;
+
+    IF val is NULL THEN
+      sql := sql || 'NULL' ;
+    ELSE
+      typ := (j->'columntypes')->>i;
+      CASE typ 
+        WHEN 'text', 'timestamp without time zone' THEN
+          -- need quote value
+          sql := sql || '''' || ((j->'columnvalues')->>i) || '''' ;
+        ELSE
+          -- no quote value
+          sql := sql || ((j->'columnvalues')->>i) ;
+      END CASE;
+    END IF;
+
   END LOOP;
 
   sql := sql || ')';

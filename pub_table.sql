@@ -10,12 +10,13 @@ CREATE TABLE table_x (
   update_time timestamp, 
   status text, 
   latitude float, 
-  longitude float
+  longitude float,
+  memo text
 );
 CREATE INDEX updt_idx ON table_x USING btree (update_time);
 
 
 -- ロジデコ対象外のダミーテーブル
 -- table_y
-CREATE TABLE table_y (device_id int, dummy text);
+CREATE TABLE table_y (device_id int, status varchar(16), memo text);
 
