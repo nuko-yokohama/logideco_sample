@@ -33,13 +33,13 @@ BEGIN
       sql := sql || 'NULL' ;
     ELSE
       typ := (j->'columntypes')->>i;
-      CASE typ 
-        WHEN 'text', 'timestamp without time zone' THEN
-          -- need quote value
-          sql := sql || '''' || ((j->'columnvalues')->>i) || '''' ;
-        ELSE
+      CASE 
+        WHEN typ ~ '(smallint|integer|bigint|numeric|real|double precision|money).*' THEN
           -- no quote value
           sql := sql || ((j->'columnvalues')->>i) ;
+        ELSE
+          -- need quote value
+          sql := sql || '''' || ((j->'columnvalues')->>i) || '''' ;
       END CASE;
     END IF;
 
