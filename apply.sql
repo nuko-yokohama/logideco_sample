@@ -53,14 +53,14 @@ $$
 LANGUAGE plpgsql;
 
 --
--- external:apply_json(t text)
--- pt publish Table name.
--- st subscribe Table name to be inserted.
+-- external:apply_json(pt1 text, st1 text, pt2 text, st2 text)
+-- pt1, pt2 publish Table name.
+-- st1, st2 subscribe Table name to be inserted.
 --
-CREATE OR REPLACE FUNCTION apply_json(pt text, st text) RETURNS integer
+CREATE OR REPLACE FUNCTION apply_json2(pt1 text, st1 text, pt2 text, st2 text) RETURNS integer
 AS $$
 DECLARE
- r srv1_slot%rowtype;
+ r logideco_slot%rowtype;
  elms integer;
  kind text;
  sql text;
@@ -68,21 +68,77 @@ DECLARE
  t_name text;
 BEGIN
   FOR r IN
-    SELECT * FROM srv1_slot
+    SELECT * FROM logideco_slot
   LOOP
     elms := jsonb_array_length((r.data::jsonb)->'change');
     -- RAISE NOTICE 'elms=%', elms;
     FOR i IN 0 .. (elms - 1) LOOP
       t_name := (((r.data::jsonb)->'change')-> i )->>'table';
-      CONTINUE WHEN t_name <> pt;
+      CONTINUE WHEN t_name <> pt1 AND t_name <> pt2;
 
       kind := (((r.data::jsonb)->'change')-> i )->>'kind';
       -- RAISE NOTICE 'kind=%', kind;
       CASE kind 
         WHEN 'insert', 'update' THEN
           -- Create insert statement
-          sql := create_insert_statement_from_json( (((r.data::jsonb)->'change')-> i ), st );
-          RAISE NOTICE 'sql=%', sql;
+          IF t_name = pt1 THEN
+            sql := create_insert_statement_from_json( (((r.data::jsonb)->'change')-> i ), st1 );
+          ELSIF t_name = pt2 THEN
+            sql := create_insert_statement_from_json( (((r.data::jsonb)->'change')-> i ), st2 );
+          ELSE
+           -- bug path
+            RAISE EXCEPTION 'invalid table name, table name = %', t_name;
+          END IF;
+          -- RAISE NOTICE 'sql=%', sql;
+          -- execute insert statement.
+          EXECUTE sql;
+          created_num := created_num + 1;
+        ELSE
+          -- nop
+      END CASE;
+    END LOOP;
+  END LOOP;
+  RETURN created_num;
+END;
+$$
+LANGUAGE plpgsql;
+
+--
+-- external:apply_json(pt1 text, st1 text)
+-- pt1 publish Table name.
+-- st1 subscribe Table name to be inserted.
+--
+CREATE OR REPLACE FUNCTION apply_json(pt1 text, st1 text) RETURNS integer
+AS $$
+DECLARE
+ r logideco_slot%rowtype;
+ elms integer;
+ kind text;
+ sql text;
+ created_num integer := 0;
+ t_name text;
+BEGIN
+  FOR r IN
+    SELECT * FROM logideco_slot
+  LOOP
+    elms := jsonb_array_length((r.data::jsonb)->'change');
+    -- RAISE NOTICE 'elms=%', elms;
+    FOR i IN 0 .. (elms - 1) LOOP
+      t_name := (((r.data::jsonb)->'change')-> i )->>'table';
+      CONTINUE WHEN t_name <> pt1; 
+
+      kind := (((r.data::jsonb)->'change')-> i )->>'kind';
+      -- RAISE NOTICE 'kind=%', kind;
+      CASE kind 
+        WHEN 'insert', 'update' THEN
+          -- Create insert statement
+          IF t_name = pt1 THEN
+            sql := create_insert_statement_from_json( (((r.data::jsonb)->'change')-> i ), st1 );
+          ELSE
+           -- bug path
+            RAISE EXCEPTION 'invalid table name, table name = %', t_name;
+          END IF;
+          -- RAISE NOTICE 'sql=%', sql;
           -- execute insert statement.
           EXECUTE sql;
           created_num := created_num + 1;
