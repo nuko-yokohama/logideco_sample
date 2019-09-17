@@ -36,10 +36,10 @@ BEGIN
       CASE 
         WHEN typ ~ '(smallint|integer|bigint|numeric|real|double precision|money).*' THEN
           -- no quote value
-          sql := sql || ((j->'columnvalues')->>i) ;
+          sql := sql || val ;
         ELSE
           -- need quote value
-          sql := sql || '''' || ((j->'columnvalues')->>i) || '''' ;
+          sql := sql || '''' || val || '''' ;
       END CASE;
     END IF;
 
