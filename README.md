@@ -190,8 +190,9 @@ INSERTによって挿入された情報および、UPDATEによって更新さ�
 
 ## サンプル
 
-``sample1``フォルダに、``logideco_sample_test.sh``を実行すると、``apply_json2()``を使った2つのヒストリテーブルへの反映と、
+``sample1``フォルダに置いてある、``logideco_sample_test.sh``を実行すると、testdbデータベス上で、``apply_json2()``を使った2つのヒストリテーブルへの反映と、
 反映先へのINSERTに失敗した場合（history_x テーブルのRENAMEで失敗させている）、``__sql_table``テーブルへの生成INSERT文の格納が確認できる。
+(実行ユーザはpostgresユーザになっている)
 
 以下は、``logodemo_sample_test.sh``の実行例となる。
 
