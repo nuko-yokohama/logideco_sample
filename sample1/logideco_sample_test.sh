@@ -19,10 +19,10 @@ psql -U ${DBUSER} ${DBNAME} -e -f pub_table.sql
 echo "==== create subscribe tables ===="
 psql -U ${DBUSER} ${DBNAME} -e -f sub_table.sql
 echo "==== create slot and view===="
-psql -U ${DBUSER} ${DBNAME} -e -f create_slot_view.sql
+psql -U ${DBUSER} ${DBNAME} -e -f ../create_slot_view.sql
 
 echo "==== install apply_json() ===="
-psql -U ${DBUSER} ${DBNAME} -f apply.sql
+psql -U ${DBUSER} ${DBNAME} -f ../apply.sql
 
 # test
 echo "==== insert and update for publish tables ===="
