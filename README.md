@@ -163,14 +163,6 @@ $ psql -U postgres -p 10001 testdb -c "TABLE history"
 
 ```
 $ psql testdb -c "SELECT apply_json('table_x', 'history')"
-NOTICE:  sql=INSERT INTO history VALUES (101,'2019-02-18 20:30:28.947094','running',35.44778,139.6425)
-NOTICE:  sql=INSERT INTO history VALUES (102,'2019-02-18 20:30:28.949321','running',35.445,139.4)
-NOTICE:  sql=INSERT INTO history VALUES (101,'2019-02-18 20:30:28.950322','running',35.44778,139.6425)
-NOTICE:  sql=INSERT INTO history VALUES (102,'2019-02-18 20:30:28.952682','running',35.446,139.3)
-NOTICE:  sql=INSERT INTO history VALUES (103,'2019-02-18 20:30:28.953942','running',35.449,139.2)
-NOTICE:  sql=INSERT INTO history VALUES (101,'2019-02-18 20:30:28.955218','stop',35.44778,139.6425)
-NOTICE:  sql=INSERT INTO history VALUES (102,'2019-02-18 20:30:28.955218','running',35.446,139.3)
-NOTICE:  sql=INSERT INTO history VALUES (103,'2019-02-18 20:30:28.955218','running',35.447,139.1)
  apply_json
 ------------
           8
