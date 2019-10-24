@@ -91,7 +91,13 @@ BEGIN
           END IF;
           -- RAISE NOTICE 'sql=%', sql;
           -- execute insert statement.
-          EXECUTE sql;
+          BEGIN
+            EXECUTE sql;
+	  EXCEPTION
+            WHEN OTHERS THEN
+            -- insert to SQL statement table.
+            INSERT INTO __sql_table (ts, sql) VALUES (clock_timestamp(), sql);
+          END;
           created_num := created_num + 1;
         ELSE
           -- nop
@@ -140,7 +146,13 @@ BEGIN
           END IF;
           -- RAISE NOTICE 'sql=%', sql;
           -- execute insert statement.
-          EXECUTE sql;
+          BEGIN
+            EXECUTE sql;
+	  EXCEPTION
+            WHEN OTHERS THEN
+            -- insert to SQL statement table.
+            INSERT INTO __sql_table (ts, sql) VALUES (clock_timestamp(), sql);
+          END;
           created_num := created_num + 1;
         ELSE
           -- nop

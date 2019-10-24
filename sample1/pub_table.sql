@@ -2,6 +2,7 @@
 
 DROP TABLE IF EXISTS table_x;
 DROP TABLE IF EXISTS table_y;
+DROP TABLE IF EXISTS table_z;
 
 -- ロジデコ対象テーブル
 -- table_x

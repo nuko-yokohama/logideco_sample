@@ -18,6 +18,11 @@ echo "==== create publish tables ===="
 psql -U ${DBUSER} ${DBNAME} -e -f pub_table.sql
 echo "==== create subscribe tables ===="
 psql -U ${DBUSER} ${DBNAME} -e -f sub_table.sql
+
+
+echo "==== create error sql table ===="
+psql -U ${DBUSER} ${DBNAME} -e -f ../__sql_table.sql
+
 echo "==== create slot and view===="
 psql -U ${DBUSER} ${DBNAME} -e -f ../create_slot_view.sql
 
@@ -42,4 +47,16 @@ psql -U ${DBUSER} ${DBNAME} -e -c "SELECT apply_json2('table_x', 'history_x', 't
 echo "==== check subscribe tables 2 ===="
 psql -U ${DBUSER} ${DBNAME} -e -c "TABLE history_x"
 psql -U ${DBUSER} ${DBNAME} -e -c "TABLE history_y"
+psql -U ${DBUSER} ${DBNAME} -e -c "TABLE __sql_table"
 
+
+echo "==== error case test ===="
+
+psql -U ${DBUSER} ${DBNAME} -e -c "ALTER TABLE history_x RENAME TO history_foo"
+psql -U ${DBUSER} ${DBNAME} -e -f error_case.sql
+psql -U ${DBUSER} ${DBNAME} -e -c "SELECT apply_json2('table_x', 'history_x', 'table_y', 'history_y')"
+psql -U ${DBUSER} ${DBNAME} -e -c "TABLE history_x"
+psql -U ${DBUSER} ${DBNAME} -e -c "TABLE history_y"
+echo "==== history_x insert query only ====="
+psql -U ${DBUSER} ${DBNAME} -e -c "TABLE __sql_table"
+psql -U ${DBUSER} ${DBNAME} -e -c "ALTER TABLE history_foo RENAME TO history_x"
